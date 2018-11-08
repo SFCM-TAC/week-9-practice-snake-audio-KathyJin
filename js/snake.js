@@ -14,6 +14,41 @@ var xFruit = 0;
 var yFruit = 0;
 var scoreElem;
 
+var player = new Tone.Synth(
+{
+  envelope: {
+    attack : 0.2 ,
+    decay : 0.1 ,
+    sustain :0.1 ,
+    release : 0.1 ,
+  }}
+).toMaster();
+
+var embiant = new Tone.Synth({
+	oscillator : {
+  	type : 'fmsquare',
+    modulationType : 'sawtooth',
+    modulationIndex : 3,
+    harmonicity: 3.4
+  },
+  envelope : {
+  	attack : 0.1,
+    decay : 0.1,
+    sustain: 0.1,
+    release: 0.1
+  }
+}).toMaster()
+
+
+var pitch = ["C4","D4","G3"];
+function osc (){
+
+  var pickNote = Math.floor(Math.random() * 3);
+  var randomNote = pitch [pickNote];
+  embiant.triggerAttackRelease(randomNote, '8n');
+}
+var loop = setInterval(osc, 100);
+
 function setup() {
   scoreElem = createDiv('Score = 0');
   scoreElem.position(20, 20);
@@ -93,6 +128,9 @@ function checkGameStatus() {
     noLoop();
     var scoreVal = parseInt(scoreElem.html().substring(8));
     scoreElem.html('Game ended! Your score was : ' + scoreVal);
+    //lose
+    clearInterval(loop);
+    player.triggerTa
   }
 }
 
@@ -124,6 +162,7 @@ function checkForFruit() {
     yCor.unshift(yCor[0]);
     numSegments++;
     updateFruitCoordinates();
+    player.triggerAttackRelease('C#7', '8n');
   }
 }
 
